@@ -1,17 +1,28 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using POSapp.Models;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Windows.Forms;
 
-namespace POSapp.Hubs
+namespace PrintPos.Controllers
 {
-    public class PrintHub : Hub
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PrintController : ControllerBase
     {
-        public async Task Print()
+        [HttpPost]
+        public IActionResult Post()
         {
             var s = new PrintingExample(new PrintModel());
+            return Ok(s);
         }
+    }
+    public class PrintModel
+    {
+
+        public string Heading { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string Phone { get; set; }
     }
 
     public class PrintingExample
@@ -28,16 +39,16 @@ namespace POSapp.Hubs
             try
             {
                 PrintDialog pd = new PrintDialog();
-              //  pd.ShowDialog();
+                //  pd.ShowDialog();
                 var pdoc = new PrintDocument();
-               // PrinterSettings ps = new PrinterSettings();
+                // PrinterSettings ps = new PrinterSettings();
                 //Font font = new Font("calibri", 15);
                 PaperSize psize = new PaperSize("Custom", 100, 30000);
                 pd.Document = pdoc;
                 pd.Document.DefaultPageSettings.PaperSize = psize;
                 pdoc.DefaultPageSettings.PaperSize.Height = 30000;
                 pdoc.DefaultPageSettings.PaperSize.Width = 520;
-               // pdoc.PrinterSettings.PrinterName = "POS";
+                // pdoc.PrinterSettings.PrinterName = "POS";
                 pdoc.PrintPage += new PrintPageEventHandler(PrintPage);
                 pdoc.Print();
                 pdoc.PrintPage -= new PrintPageEventHandler(PrintPage);
@@ -55,7 +66,7 @@ namespace POSapp.Hubs
             Graphics graphics = e.Graphics;
             Font font = new Font("calibri", 10);
             float fontHeight = font.GetHeight();
-           
+
             String underLine = "-----------------------------------------------------------";
             int startX = 10;
             int startY = 20;
@@ -104,10 +115,10 @@ namespace POSapp.Hubs
             //graphics.DrawIcon(new Icon())
             graphics.DrawString("By : www.codemodes.com", new Font("Calibri", 10), new SolidBrush(Color.Black), startX, startY + Offset);
         }
-           
 
 
-        
-       
+
+
+
     }
 }

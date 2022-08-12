@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POSapp", "POSapp\POSapp.csproj", "{0F995497-0332-42F9-A5A1-429861BCD890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PosApp1", "PosApp1\PosApp1.csproj", "{33CA3D9C-6ADF-4B3F-9C10-8E4296576E14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PosApp1", "PosApp1\PosApp1.csproj", "{33CA3D9C-6ADF-4B3F-9C10-8E4296576E14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintPos", "PrintPos\PrintPos.csproj", "{260E8A04-2467-49F2-8E17-B4CCF8D219B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{33CA3D9C-6ADF-4B3F-9C10-8E4296576E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33CA3D9C-6ADF-4B3F-9C10-8E4296576E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33CA3D9C-6ADF-4B3F-9C10-8E4296576E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{260E8A04-2467-49F2-8E17-B4CCF8D219B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{260E8A04-2467-49F2-8E17-B4CCF8D219B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{260E8A04-2467-49F2-8E17-B4CCF8D219B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{260E8A04-2467-49F2-8E17-B4CCF8D219B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

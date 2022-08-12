@@ -10,6 +10,7 @@
 </div>
 <button onclick="send()">jj</button>
 
+
 <script  src="~/microsoft-signalr/signalr.js"></script>
 <script>
 const connection = new signalR.HubConnectionBuilder()
@@ -17,23 +18,23 @@ const connection = new signalR.HubConnectionBuilder()
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
-async function start() {
-    try {
-        await connection.start();
-        console.log("SignalR Connected.");
-    } catch (err) {
-        console.log(err);
-        setTimeout(start, 5000);
-    }
-};
+    async function start() {
+        try {
+            await connection.start();
+            console.log("SignalR Connected.");
+        } catch (err) {
+            console.log(err);
+            setTimeout(start, 5000);
+        }
+    };
 
-connection.onclose(async () => {
-    await start();
-});
+    connection.onclose(async () => {
+        await start();
+    });
 
 // Start the connection.
-start();
-function send(){
-  connection.invoke("Print");
-}
+    start();
+    function send(){
+        connection.invoke("Print");
+    }
 </script>
