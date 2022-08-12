@@ -10,10 +10,10 @@ namespace PrintPos.Controllers
     public class PrintController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post(object data)
         {
             var s = new PrintingExample(new PrintModel());
-            return Ok(s);
+            return Ok(new { message = "Print SuccessFull", status = true });
         }
     }
     public class PrintModel
