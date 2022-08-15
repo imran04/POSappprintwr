@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using PrintPos.Models;
 using System.Drawing;
 using System.Drawing.Printing;
+using static System.Windows.Forms.AxHost;
 
 namespace PrintPos.Controllers
 {
@@ -10,28 +13,29 @@ namespace PrintPos.Controllers
     public class PrintController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Post(object data)
+        public IActionResult Post(Invoice data)
         {
-            var s = new PrintingExample(new PrintModel());
+            var s = new PrintingExample(data);
             return Ok(new { message = "Print SuccessFull", status = true });
         }
     }
-    public class PrintModel
+    public class PrintHub : Hub
     {
-
-        public string Heading { get; set; }
-        public string Address1 { get; set; }
-        public string Address2 { get; set; }
-        public string Phone { get; set; }
+        public async Task Print(Invoice Data)
+        {
+            var s = new PrintingExample(Data);
+        }
     }
+   
 
     public class PrintingExample
     {
-        PrintModel printModel;
+        Invoice printModel;
 
-        public PrintingExample(PrintModel data)
+        public PrintingExample(Invoice data)
         {
             printModel = data;
+            Console.WriteLine("Print Job");
             Printing();
         }
         public void Printing()
@@ -39,16 +43,12 @@ namespace PrintPos.Controllers
             try
             {
                 PrintDialog pd = new PrintDialog();
-                //  pd.ShowDialog();
                 var pdoc = new PrintDocument();
-                // PrinterSettings ps = new PrinterSettings();
-                //Font font = new Font("calibri", 15);
-                PaperSize psize = new PaperSize("Custom", 100, 30000);
+                PaperSize psize = new PaperSize("Custom", 300, 500);
                 pd.Document = pdoc;
                 pd.Document.DefaultPageSettings.PaperSize = psize;
-                pdoc.DefaultPageSettings.PaperSize.Height = 30000;
-                pdoc.DefaultPageSettings.PaperSize.Width = 520;
-                // pdoc.PrinterSettings.PrinterName = "POS";
+                pdoc.DefaultPageSettings.PaperSize.Height = 500;
+                pdoc.DefaultPageSettings.PaperSize.Width = 300;
                 pdoc.PrintPage += new PrintPageEventHandler(PrintPage);
                 pdoc.Print();
                 pdoc.PrintPage -= new PrintPageEventHandler(PrintPage);
@@ -63,21 +63,18 @@ namespace PrintPos.Controllers
         private void PrintPage(object sender, PrintPageEventArgs e)
         {
 
-            Graphics graphics = e.Graphics;
-            Font font = new Font("calibri", 10);
-            float fontHeight = font.GetHeight();
-
-            String underLine = "-----------------------------------------------------------";
+            
+            Graphics graphics = e.Graphics!;
+            string underLine = "";
             int startX = 10;
             int startY = 20;
             int Offset = 10;
             Offset += 0;
             Offset = Offset + 15;
-            graphics.DrawString(underLine, new Font("calibri", 10), new SolidBrush(Color.Black), 0, startY + Offset);
-            Offset = Offset + 15;
-            graphics.DrawString($"{printModel.Heading}", new Font("Calibri", 10), new SolidBrush(Color.Black), startX + 15, startY + Offset);
-            Offset = Offset + 15;
-            graphics.DrawString(underLine, new Font("calibri", 10), new SolidBrush(Color.Black), 0, startY + Offset);
+            PrintHeader(graphics, startX + 10, startY += Offset);
+            PrintCustomer(graphics,startX + 10, startY + Offset);
+           
+            
             double tAmount = 0;
             double gTotal = 0;
             string xParent = "*";
@@ -106,18 +103,31 @@ namespace PrintPos.Controllers
                 string nextParent;
 
                 nextParent = "toLocation".ToString();
-
+                e.PageSettings.PaperSize.Height += 22;
             }
             graphics.DrawString(underLine, new Font("calibri", 10), new SolidBrush(Color.Black), 0, startY + Offset);
             Offset = Offset + 15;
             graphics.DrawString("Print Time :  " + DateTime.Now.ToString("d, MMMM, yyyy. hh:mm - tt "), new Font("Calibri", 10), new SolidBrush(Color.Black), startX, startY + Offset);
             Offset = Offset + 15;
-            //graphics.DrawIcon(new Icon())
-            graphics.DrawString("By : www.codemodes.com", new Font("Calibri", 10), new SolidBrush(Color.Black), startX, startY + Offset);
+            
         }
 
 
+        private void PrintHeader(Graphics graphics,int StartX,int StartY)
+        {
+            graphics.DrawString("JRS", new Font("calibri", 10), new SolidBrush(Color.Black), StartX, StartY);
+        }
 
+        private void PrintCustomer(Graphics graphics, int StartX, int StartY)
+        {
+            StartY += 15;
+            graphics.DrawLine(new Pen(Brushes.Black),new Point(StartX,StartY ),new Point(300-StartX,StartY));
+            StartY += 15;
+            graphics.DrawString($"Customer {printModel?.Customer?.Fullname}", new Font("calibri", 10), new SolidBrush(Color.Black), StartX, StartY);
+            StartY += 15;
+            graphics.DrawLine(new Pen(Brushes.Black), new Point(StartX, StartY), new Point(300 - StartX, StartY));
+           
+        }
 
 
     }
